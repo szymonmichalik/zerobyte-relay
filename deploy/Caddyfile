@@ -1,0 +1,5 @@
+{$RELAY_DOMAIN} {
+	# Caddy writes no access log unless a `log` directive asks for one: keep it
+	# that way, so the relay keeps no record of who connected.
+	reverse_proxy relay:8080
+}
