@@ -1,0 +1,36 @@
+# Deploy your own ZeroByte Relay to Cloudflare Workers.
+#
+#   1. Set RELAY_APPS below (generate ids with `npm run app-id`).
+#   2. Uncomment `routes` to serve it on your own domain, or keep workers.dev.
+#   3. npx wrangler deploy
+#
+# relay.zerobyte.cloud, the relay Derived uses, runs wrangler.hosted.toml.
+
+name = "my-zerobyte-relay"
+main = "src/cloudflare.js"
+compatibility_date = "2026-10-01"
+
+# routes = [{ pattern = "relay.example.com", custom_domain = true }]
+
+[vars]
+RELAY_APPS = ""
+
+# One SQLite-backed Durable Object per mailbox.
+[[durable_objects.bindings]]
+name = "MAILBOX"
+class_name = "Mailbox"
+
+[[migrations]]
+tag = "v1"
+new_sqlite_classes = ["Mailbox"]
+
+# No Workers Logs, no traces: the relay keeps no record of who connected.
+[observability]
+enabled = false
+
+[observability.logs]
+enabled = false
+invocation_logs = false
+
+[observability.traces]
+enabled = false

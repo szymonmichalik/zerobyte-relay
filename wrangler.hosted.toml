@@ -1,0 +1,45 @@
+# relay.zerobyte.cloud, the relay Derived uses. Not open to other apps:
+#   npx wrangler deploy -c wrangler.hosted.toml
+
+name = "zerobyte-relay"
+main = "src/cloudflare.js"
+compatibility_date = "2026-10-01"
+# Served only on relay.zerobyte.cloud, never on a second *.workers.dev address.
+workers_dev = false
+preview_urls = false
+
+# Custom Domain: deploy creates the DNS record and the certificate itself.
+# The zerobyte.cloud zone must be on the same Cloudflare account.
+[[routes]]
+pattern = "relay.zerobyte.cloud"
+custom_domain = true
+
+# Registered apps (src/apps.js). Derived, registered 2026-10-21.
+[vars]
+RELAY_APPS = "01a1601b-fa85-7d58-b2a2-1416e0a6b054=derived"
+
+# One SQLite-backed Durable Object per mailbox.
+[[durable_objects.bindings]]
+name = "MAILBOX"
+class_name = "Mailbox"
+
+[[migrations]]
+tag = "v1"
+new_sqlite_classes = ["Mailbox"]
+
+# Load statistics per app: operation, status class, requests and
+# bytes. No mailbox, token or IP address is written (src/core.js `count`).
+[[analytics_engine_datasets]]
+binding = "USAGE"
+dataset = "zerobyte_relay_usage"
+
+# No Workers Logs, no traces: the relay keeps no record of who connected.
+[observability]
+enabled = false
+
+[observability.logs]
+enabled = false
+invocation_logs = false
+
+[observability.traces]
+enabled = false

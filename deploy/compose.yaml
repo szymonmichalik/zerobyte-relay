@@ -1,0 +1,29 @@
+# A relay with automatic HTTPS. Point a DNS record for RELAY_DOMAIN at this
+# host, then:
+#
+#   RELAY_DOMAIN=relay.example.com RELAY_APPS=<app id> docker compose up -d
+
+services:
+  relay:
+    build: ..
+    restart: unless-stopped
+    environment:
+      RELAY_APPS: ${RELAY_APPS:?set RELAY_APPS}
+    volumes:
+      - relay-data:/data
+
+  caddy:
+    image: caddy:2
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    environment:
+      RELAY_DOMAIN: ${RELAY_DOMAIN:?set RELAY_DOMAIN}
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy-data:/data
+
+volumes:
+  relay-data:
+  caddy-data:

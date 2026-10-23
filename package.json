@@ -1,0 +1,36 @@
+{
+  "name": "zerobyte-relay",
+  "version": "1.0.0",
+  "description": "ZeroByte Relay: a blind, end-to-end encrypted mailbox between paired devices. Self-host on Node or deploy to Cloudflare Workers.",
+  "license": "AGPL-3.0-only",
+  "author": "Szymon Michalik",
+  "homepage": "https://docs.zerobyte.cloud/relay/",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/szymonmichalik/zerobyte-relay.git"
+  },
+  "type": "module",
+  "bin": {
+    "zerobyte-relay": "bin/zerobyte-relay.js"
+  },
+  "files": [
+    "bin/",
+    "src/",
+    "LICENSE",
+    "NOTICE",
+    "README.md"
+  ],
+  "engines": {
+    "node": ">=22.13"
+  },
+  "scripts": {
+    "start": "node bin/zerobyte-relay.js",
+    "app-id": "node bin/zerobyte-relay.js app-id",
+    "test": "node --test",
+    "dev:cloudflare": "wrangler dev",
+    "deploy:cloudflare": "wrangler deploy"
+  },
+  "devDependencies": {
+    "wrangler": "^4.0.0"
+  }
+}
